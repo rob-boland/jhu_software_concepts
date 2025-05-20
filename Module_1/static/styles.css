@@ -7,24 +7,31 @@
     font-size: 20px;
     margin: 0 auto;
     text-align: center;
-    background-color: white;
   }
 
   .navigation {
     overflow: hidden;
-    background-color: darkblue;
+    background-color: gray;
   }
 
   .navigation a {
     float: right;
-    color: lightblue;
+    color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 11px;
   }
 
+  .navigation a:hover {
+    background-color: lightgrey;
+  }
+
   .navigation a.active {
-    background-color: lightblue;
-    color:gray;
+    background-color: darkgrey;
+    color:white;
+  }
+
+  .navigation a.active:hover {
+    background-color: lightgrey;
   }
