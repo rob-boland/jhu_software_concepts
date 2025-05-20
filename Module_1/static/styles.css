@@ -11,7 +11,7 @@
 
   .navigation {
     overflow: hidden;
-    background-color: gray;
+    background-color: darkblue;
   }
 
   .navigation a {
@@ -24,14 +24,14 @@
   }
 
   .navigation a:hover {
-    background-color: lightgrey;
+    background-color: rgb(111, 145, 218);
   }
 
   .navigation a.active {
-    background-color: darkgrey;
+    background-color: rgb(64, 106, 196);
     color:white;
   }
 
   .navigation a.active:hover {
-    background-color: lightgrey;
+    background-color: rgb(111, 145, 218);
   }
