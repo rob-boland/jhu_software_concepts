@@ -7,28 +7,24 @@
     font-size: 20px;
     margin: 0 auto;
     text-align: center;
+    background-color: white;
   }
-  
-  a,
-  a:visited {
-    color: #007bff;
+
+  .navigation {
+    overflow: hidden;
+    background-color: darkblue;
   }
-  
-  a:hover {
-    color: #0056b3;
+
+  .navigation a {
+    float: right;
+    color: lightblue;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 11px;
   }
-  
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  nav ul li {
-    display: inline;
-    margin: 0 5px;
-  }
-  
-  main {
-    width: 80%;
-    margin: 0 auto;
+
+  .navigation a.active {
+    background-color: lightblue;
+    color:gray;
   }
