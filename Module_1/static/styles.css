@@ -57,3 +57,10 @@
     max-width: 250px;
     height: auto;
   }
+
+  .contact-content {
+    text-align: left;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    max-width: 90%;
+  }
