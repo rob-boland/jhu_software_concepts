@@ -28,7 +28,7 @@ Module_1/
 1. **Clone the repository:**
    ```powershell
    git clone git@github.com:rob-boland/jhu_software_concepts.git
-   cd jhu_software_concepts/Module_1
+   cd <repository directory>
    ```
 
 2. **(Recommended) Create and activate a virtual environment:**
