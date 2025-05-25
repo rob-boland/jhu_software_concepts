@@ -1,53 +1,59 @@
 # Boland Website Flask Application
 
-This is a Flask web application written by Jon Robert N. Boland. The app is organized as a Python package and can be run by installing requirements.txt and running python run.py.
+This is a Flask web application written by Jon Robert N. Boland. The app is organized as a Python package and can be run by installing `requirements.txt` and running `python run.py`.
 
 ## Project Structure
 
+```
 Module_1/
-│   run.py
-│   requirements.txt
-│
-├───boland_website/
-│   │   __init__.py
-│   │   pages.py
-│   │
-│   ├───static/
-│   │   └───images/
+├── run.py
+├── requirements.txt
+├── boland_website/
+│   ├── __init__.py
+│   ├── pages.py
+│   ├── static/
+│   │   └── images/
 │   │   styles.css
-│   └───templates/
-│       │   base.html
-│       │   _navigation.html
-│       └───pages/
-│           home.html
-│           contact.html
-|           projects.html
+│   └── templates/
+│       ├── base.html
+│       ├── _navigation.html
+│       └── pages/
+│           ├── home.html
+│           ├── contact.html
+│           └── projects.html
+```
 
 ## Installation
 
 1. **Clone the repository:**
-   $ cd <repository-folder>
-   $ git clone git@github.com:rob-boland/jhu_software_concepts.git
+   ```powershell
+   git clone git@github.com:rob-boland/jhu_software_concepts.git
+   cd jhu_software_concepts/Module_1
+   ```
 
 2. **(Recommended) Create and activate a virtual environment:**
-   $ cd <repository-folder>
-   $ python -m venv env
+   ```powershell
+   python -m venv env
    # On Windows:
-        .\env\Scripts\activate
+   .\env\Scripts\activate
    # On macOS/Linux:
-        source env/bin/activate
+   source env/bin/activate
+   ```
 
 3. **Install dependencies:**
-   $ pip install -r requirements.txt
-
+   ```powershell
+   pip install -r requirements.txt
+   ```
 
 ## Running the Application
 
-This application is designed to be run simply with the run.py file:
+This application is designed to be run simply with the `run.py` file:
 
-$ python run.py
+```powershell
+python run.py
+```
 
-The app will start in debug mode and be accessible at [http://localhost:5000].
+The app will start in debug mode and be accessible at [http://localhost:5000](http://localhost:5000).
 
 ## Project Organization
 
