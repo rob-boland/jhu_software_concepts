@@ -1,6 +1,5 @@
 import boland_website
 
-
 if __name__ == "__main__":
     # Create Flask app, run with localhost:5000 address.
     app = boland_website.create_app()

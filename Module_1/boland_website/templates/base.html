@@ -5,13 +5,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css' )}}">
 </head>
 <body>
+  <!-- Navigation bar at the top of each page -->
 {% include ("_navigation.html") %}
 <section>
   <header>
+    <!-- Header for each page -->
     {% block header %}{% endblock header %}
   </header>
   <main>
-    {% block content %}<p>No messages.</p>{% endblock content %}
+    <!-- Main content for each page-->
+    {% block content %}{% endblock content %}
   </main>
 </section>
 </body>
