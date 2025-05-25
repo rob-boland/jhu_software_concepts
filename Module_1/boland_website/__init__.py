@@ -4,9 +4,10 @@ from flask import Flask
 from boland_website import pages
 
 def create_app():
-    app = Flask(__name__)
+    """Create and configure the Flask application."""
     
-    # Register blueprints
+    # Create Flask app and register blueprints
+    app = Flask(__name__)
     app.register_blueprint(pages.bp)
     
     return app
