@@ -1,12 +1,6 @@
-from flask import Flask
+import boland_website
 
-# Module imports
-import pages
-
-# Create Flask application and register blueprints
-app = Flask(__name__)
-app.register_blueprint(pages.bp)
+app = boland_website.create_app()
 
 if __name__ == "__main__":
-    # Run locally in debug mode
     app.run(host="0.0.0.0", port=5000, debug=True)
