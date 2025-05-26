@@ -8,4 +8,7 @@ html = page.read().decode("utf-8")
 
 pat = re.compile(r'<.*title.*>(.*?)</.*title.*>', re.IGNORECASE)
 match = pat.search(html)
-print(match)
+title = match.group()
+
+title_subbed = re.sub(r'<.*?>', '', title)
+print(title_subbed)
