@@ -1,14 +1,11 @@
 from urllib.request import urlopen
-import re
+from bs4 import BeautifulSoup
 
-url = "http://olympus.realpython.org/profiles/poseidon"
+url = "http://olympus.realpython.org/profiles/dionysus"
 
 page = urlopen(url)
 html = page.read().decode("utf-8")
 
-pat = re.compile(r'<.*title.*>(.*?)</.*title.*>', re.IGNORECASE)
-match = pat.search(html)
-title = match.group()
+soup = BeautifulSoup(html, "html.parser")
 
-title_subbed = re.sub(r'<.*?>', '', title)
-print(title_subbed)
+print(soup.title.sourceline)
