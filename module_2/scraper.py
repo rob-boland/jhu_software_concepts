@@ -1,25 +1,28 @@
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
-import mechanicalsoup
+from urllib import parse, robotparser
 
+agent = "rob"
+url = "https://www.thegradcafe.com/"
 
-# 1
-browser = mechanicalsoup.Browser()
-url = "http://olympus.realpython.org/login"
-login_page = browser.get(url)
-login_html = login_page.soup
+def get_robots_txt(url:str, paths:list[str]) -> list[tuple[bool, str]]:
+    """Fetches the robots.txt file for the given URL and checks if the provided
+    paths are allowed for the given user agent.
+    """
+    # Create a robot parser and set the URL to robots.txt file
+    parser = robotparser.RobotFileParser(url)
+    parser.set_url(parse.urljoin(url, "robots.txt"))
+    parser.read()
 
-# 2
-form = login_html.select("form")[0]
-form.select("input")[0]["value"] = "zeus"
-form.select("input")[1]["value"] = "ThunderDude"
+    allowed_paths = []
+    for path in paths:
+        allowed_paths.append(f"{parser.can_fetch(agent, path), path}")
 
-# 3
-profiles_page = browser.submit(form, login_page.url)
+    return allowed_paths
 
-links = profiles_page.soup.select("a")
+print(get_robots_txt(url))
 
-for link in links:
-    address = link["href"]
-    text = link.text
-    print(f"{text}: {address}")
+paths = [
+        "/",
+        "/cgi-bin/",
+        "/admin/",
+        "survey/?program=Computer+Science"
+    ]
