@@ -43,10 +43,42 @@ def parse_column_titles(soup:BeautifulSoup) -> list[str]:
     
     return column_titles
 
-tbody = soup.find("tbody")
-tr = tbody.find_all("tr")
-for row in tr:
-    if "class" not in row.attrs.keys():  # First line of result
-        for col in row.find_all("td")[:4]:
-            print(col.text.strip())
-        print("-" * 20)
+def parse_rows(soup:BeautifulSoup) -> list[list[str]]:
+    """Extract rows of data from the survey page. This will result in
+    duplicate 'Accepted/Failed on ##' entries that must be cleaned."""
+    working_list = []
+    results = []
+
+    # tbody contains tr elements with data rows.
+    # Survey results are broken into 3 rows; first row has no class,
+    # second row will be there and is comprised of divs, third row
+    # may be there and is comprised of a p element.
+    tbody = soup.find("tbody")
+    tr_iter = tbody.find_all("tr")
+    for tr in tr_iter:
+        # First line of result:
+        if "class" not in tr.attrs.keys():
+            # Append list to results and create new
+            if working_list:
+                results.append(working_list)
+                working_list = []
+            
+            # Find column data and append
+            for col_i, col in enumerate(tr.find_all("td")):
+                # First four columns are text, the 5th has a link to the survey page
+                if col_i < 4:
+                    working_list.append(col.text.strip())
+                else:
+                    working_list.append(col.find("a").attrs['href'])
+
+        # Second or third line of result:          
+        else:
+            for col in tr.find_all("div", class_="tw-inline-flex"):  # Second line
+                working_list.append(col.text.strip())
+            for col in tr.find_all("p"):  # Third line
+                working_list.append(col.text.strip())
+
+    if working_list:
+        results.append(working_list)
+    
+    return results
