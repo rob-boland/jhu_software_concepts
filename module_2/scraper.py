@@ -2,9 +2,7 @@ from urllib import parse, robotparser
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-agent = "rob"
-url = "https://www.thegradcafe.com/"
-survey_url = f"{url}survey/"
+
 
 def get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
     """Fetches the robots.txt file for the given URL and checks if the provided
@@ -20,12 +18,6 @@ def get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
         allowed_paths[path] = parser.can_fetch(agent, path)
 
     return allowed_paths
-
-paths = ["/", "/survey/"]
-
-survey_page = urlopen(survey_url)
-html = survey_page.read().decode("utf-8")
-soup = BeautifulSoup(html, "html.parser")
 
 def parse_column_titles(soup:BeautifulSoup) -> list[str]:
     """Extract column titles from the survey page."""
@@ -82,3 +74,57 @@ def parse_rows(soup:BeautifulSoup) -> list[list[str]]:
         results.append(working_list)
     
     return results
+
+def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000, starting_page:int=1) -> tuple[list, list[list[str]]]:
+    """Scrape survey data from the GradCafe website."""
+    # Fetch robots.txt and check availabilty of paths
+    allowed_paths = get_robots_txt(url, paths)
+    for path in allowed_paths:
+        if not allowed_paths[path]:
+            print(f"Path {path} is not allowed for user agent '{agent}'")
+
+    results = []
+    page_number = starting_page
+    n_pages_crawled = 0
+    n_surveys = 0
+
+    while (n_surveys <= min_results) and (n_pages_crawled < max_pages_to_crawl):
+        # Construct the URL for the current page
+        page_url = f"{url}?page={page_number}"
+
+        # Fetch the page content
+        try:
+            response = urlopen(page_url)
+            soup = BeautifulSoup(response, "html.parser")
+        except Exception as e:
+            print(f"Failed to fetch {page_url}: {e}")
+            break
+
+        # Parse column titles and rows
+        if page_number == starting_page:
+            column_titles = parse_column_titles(soup)
+
+        rows = parse_rows(soup)
+        results.extend(rows)
+
+        n_surveys = len(results)
+        n_pages_crawled += 1
+        page_number += 1
+
+    return column_titles, results
+
+if __name__ == "__main__":
+    agent = "rob"
+    url = "https://www.thegradcafe.com/"
+    survey_url = f"{url}survey/"
+    paths = ["/", "/survey/"]
+
+    data = scrape_data(
+        agent="rob",
+        url=survey_url,
+        paths=paths,
+        min_results=50,
+        max_pages_to_crawl=5
+    )
+
+    print(data)
