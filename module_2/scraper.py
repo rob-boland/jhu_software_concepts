@@ -1,10 +1,11 @@
 from urllib import parse, robotparser
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import json
 
 
 
-def get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
+def _get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
     """Fetches the robots.txt file for the given URL and checks if the provided
     paths are allowed for the given user agent.
     """
@@ -19,7 +20,7 @@ def get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
 
     return allowed_paths
 
-def parse_column_titles(soup:BeautifulSoup) -> list[str]:
+def _parse_column_titles(soup:BeautifulSoup) -> list[str]:
     """Extract column titles from the survey page."""
     column_titles = []
 
@@ -35,7 +36,7 @@ def parse_column_titles(soup:BeautifulSoup) -> list[str]:
     
     return column_titles
 
-def parse_rows(soup:BeautifulSoup) -> list[list[str]]:
+def _parse_rows(soup:BeautifulSoup) -> list[list[str]]:
     """Extract rows of data from the survey page. This will result in
     duplicate 'Accepted/Failed on ##' entries that must be cleaned."""
     working_list = []
@@ -78,7 +79,7 @@ def parse_rows(soup:BeautifulSoup) -> list[list[str]]:
 def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000, starting_page:int=1) -> tuple[list, list[list[str]]]:
     """Scrape survey data from the GradCafe website."""
     # Fetch robots.txt and check availabilty of paths
-    allowed_paths = get_robots_txt(url, paths)
+    allowed_paths = _get_robots_txt(url, paths)
     for path in allowed_paths:
         if not allowed_paths[path]:
             print(f"Path {path} is not allowed for user agent '{agent}'")
@@ -102,9 +103,9 @@ def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_
 
         # Parse column titles and rows
         if page_number == starting_page:
-            column_titles = parse_column_titles(soup)
+            column_titles = _parse_column_titles(soup)
 
-        rows = parse_rows(soup)
+        rows = _parse_rows(soup)
         results.extend(rows)
 
         n_surveys = len(results)
@@ -127,4 +128,5 @@ if __name__ == "__main__":
         max_pages_to_crawl=5
     )
 
-    print(data)
+    with open("module_2/data/survey_data_working.json", "w") as f:
+        json.dump(data, f, indent=4)
