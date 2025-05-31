@@ -155,4 +155,4 @@ if __name__ == "__main__":
         max_pages_to_crawl=5000
     )
 
-    save_data(cleaned_data, "module_2/visible_data/cleaned_survey_data.json")
+    save_data(cleaned_data, "module_2/applicant_data.json")
