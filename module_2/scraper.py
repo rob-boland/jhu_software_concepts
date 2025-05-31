@@ -95,6 +95,9 @@ def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_
         # Construct the URL for the current page
         page_url = f"{url}?page={page_number}"
 
+        if page_number % 10 == 0:
+            print(f"{n_surveys} / {min_results} results found, crawling page {page_number} / {max_pages_to_crawl} maximum...")
+
         # Fetch the page content
         try:
             response = http.request('GET', page_url)

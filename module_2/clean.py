@@ -41,21 +41,26 @@ def _clean_secondary_rows(row_data:list[str]) -> dict:
     """Clean GPA, GRE, and comments data from secondary rows."""
 
     update_dict = {}
-    # GRE and GPA scores follow a spccific format. Anything else is considered a comment.
-    for datum in row_data:
-        if datum[:3] == "GRE":
-            if "AW" in datum:
-                update_dict["gre_aw_score"] = float(re.search(r"\d+.\d+", datum).group(0))
-            elif "V" in datum:
-                update_dict["gre_v_score"] = int(re.search(r"\d+", datum).group(0))
+    # GRE and GPA scores follow a specific format. Anything else is considered a comment.
+
+    try:
+        for datum in row_data:
+            if datum[:3] == "GRE":
+                if "AW" in datum:
+                    update_dict["gre_aw_score"] = float(re.search(r"\d+.\d+", datum).group(0))
+                elif "V" in datum:
+                    update_dict["gre_v_score"] = int(re.search(r"\d+", datum).group(0))
+                else:
+                    update_dict["gre_score"] = int(re.search(r"\d+", datum).group(0))
+
+            elif datum[:3] == "GPA":
+                update_dict["gpa"] = float(re.search(r"\d+.\d+", datum).group(0))
+
             else:
-                update_dict["gre_score"] = int(re.search(r"\d+", datum).group(0))
-
-        elif datum[:3] == "GPA":
-            update_dict["gpa"] = float(re.search(r"\d+.\d+", datum).group(0))
-
-        else:
-            update_dict["comments"] = datum
+                update_dict["comments"] = datum
+    except AttributeError as e:
+        # If regex fails to find a match, skip that datum
+        pass
 
     return update_dict
 
@@ -66,7 +71,7 @@ def _convert_date_to_iso(date_str:str) -> tuple[str, int]:
         date_obj = datetime.datetime.strptime(date_str, "%b %d, %Y")
         return (date_obj.strftime("%Y-%m-%d"), date_obj.year)
     except ValueError:
-        return date_str  # Return original string if conversion fails
+        return (date_str, datetime.date.today().year)  # Return original string if conversion fails
     
 def _clean_applicant_status(full_status_str:str, year:int) -> str:
     """Clean applicant status string to a standardized format."""
@@ -146,7 +151,7 @@ if __name__ == "__main__":
         agent="rob",
         url="https://www.thegradcafe.com/survey/",
         paths=["/", "/survey/"],
-        min_results=10500,
+        min_results=5000,
         max_pages_to_crawl=5000
     )
 
