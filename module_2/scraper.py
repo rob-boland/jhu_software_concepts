@@ -75,7 +75,8 @@ def _parse_rows(soup:BeautifulSoup) -> list[list[str]]:
     
     return results
 
-def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000, starting_page:int=1) -> tuple[list, list[list[str]]]:
+def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000,
+                starting_page:int=1) -> tuple[list, list[list[str]]]:
     """Scrape survey data from the GradCafe website."""
     # Fetch robots.txt and check availabilty of paths
     allowed_paths = _get_robots_txt(agent, url, paths)
