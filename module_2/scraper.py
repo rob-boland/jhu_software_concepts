@@ -118,20 +118,3 @@ def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_
         page_number += 1
 
     return column_titles, results
-
-if __name__ == "__main__":
-    agent = "rob"
-    url = "https://www.thegradcafe.com/"
-    survey_url = f"{url}survey/"
-    paths = ["/", "/survey/"]
-
-    data = scrape_data(
-        agent="rob",
-        url=survey_url,
-        paths=paths,
-        min_results=50,
-        max_pages_to_crawl=5
-    )
-
-    with open("module_2/applicant_data.json", "w") as f:
-        json.dump(data, f, indent=4)

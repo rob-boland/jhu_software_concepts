@@ -1,4 +1,6 @@
-# GradCafe Survey Data Scraper (Module 2)
+# Name: Jon Robert N. Boland (jboland7)
+
+# Module Info: Module 2 - GradCafe Survey Data Scraper
 
 This module provides tools for scraping, cleaning, and saving graduate admissions survey data from TheGradCafe.com. It is designed to respect the site's robots.txt rules and to output structured, cleaned data for further analysis.
 
@@ -8,9 +10,7 @@ This module provides tools for scraping, cleaning, and saving graduate admission
 module_2/
 ├── clean.py                # Cleans and standardizes scraped data
 ├── scraper.py              # Scrapes data from TheGradCafe.com
-├── data/
-│   ├── cleaned_survey_data.json
-│   └── survey_data_working.json
+├── applicant_data.json     # Pull from running clean.py
 ```
 
 ## Features
@@ -18,7 +18,7 @@ module_2/
 - **Respects robots.txt:** Before crawling, the scraper checks robots.txt to ensure all paths are allowed for the user agent.
 - **Automated scraping:** Collects survey data from TheGradCafe.com, handling multi-page navigation.
 - **Data cleaning:** Standardizes program names, degrees, dates, and test scores for analysis.
-- **JSON output:** Saves both raw and cleaned data as JSON files for easy use in data science workflows.
+- **JSON output:** Saves both raw and cleaned data as JSON files
 
 ## Installation
 
@@ -39,30 +39,20 @@ module_2/
 
 3. **Install dependencies:**
    ```powershell
-   pip install -r ../Module_1/requirements.txt
+   pip install -r ../module_2/requirements.txt
    ```
 
 ## Usage
 
-### Scraping Data
-
-To scrape survey data and save the raw results:
-
-```powershell
-python scraper.py
-```
-
-This will crawl TheGradCafe survey pages (respecting robots.txt) and save the results to `data/survey_data_working.json`.
-
 ### Cleaning Data
 
-To clean and standardize the scraped data:
+Edit clean.py with necessary parameters (url, number of pages to be scraped, etc.) and then run it to scrape and clean your data.
 
 ```powershell
 python clean.py
 ```
 
-This will process the raw data and save the cleaned results to `data/cleaned_survey_data.json`.
+This will process the raw data and save the cleaned results to `applicant_data.json`.
 
 ## Customization
 
@@ -71,9 +61,4 @@ This will process the raw data and save the cleaned results to `data/cleaned_sur
 
 ## Notes
 
-- The scraper will not crawl any paths disallowed by robots.txt.
-- All data is saved in JSON format for easy downstream analysis.
-
-## License
-
-This project is for educational purposes.
+- The scraper will not crawl if any of the specified paths are disallowed by robots.txt.
