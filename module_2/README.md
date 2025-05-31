@@ -62,3 +62,62 @@ This will process the raw data and save the cleaned results to `applicant_data.j
 ## Notes
 
 - The scraper will not crawl if any of the specified paths are disallowed by robots.txt.
+
+## Approach
+
+### scraper.py Functions
+
+- **_get_robots_txt(url, paths):**
+  - Fetches and parses the site's robots.txt file using  robotparser.
+  - Checks if the specified paths are allowed for the user agent before scraping begins.
+  - Returns a dictionary mapping each path to a boolean indicating permission.
+
+- **_parse_column_titles(soup):**
+  - Extracts column titles from the survey table's header (`<thead>`).
+  - Cleans and standardizes the column names for downstream use.
+
+- **_parse_rows(soup):**
+  - Iterates through the table body (`<tbody>`) to extract all survey result rows.
+  - Handles multi-row entries, combining related data into a single list per result.
+  - Strips whitespace and collects links where appropriate.
+
+- **scrape_data(agent, url, paths, min_results, max_pages_to_crawl, starting_page):**
+  - Manages all elements of the scraping process.
+  - Checks robots.txt permissions, then iteratively fetches and parses survey pages using urllib3.
+  - Collects all results and column titles, returning them for further processing.
+
+### clean.py Functions and Variables
+
+- **_categories:**
+  - Standardized category names for dict and JSON outputs.
+
+- **_separate_program_name_from_level(program_name_and_level):**
+  - Splits a combined program name and degree string into separate fields using regex or newline.
+
+- **_clean_secondary_rows(row_data):**
+  - Extracts and standardizes GRE, GPA, and comments from secondary rows of survey data.
+  - Uses regex to parse scores and rejects missing or malformed data.
+
+- **_convert_date_to_iso(date_str):**
+  - Converts date strings to ISO format (YYYY-MM-DD) and extracts the year.
+  - Handles parsing errors by returning the original string and the current year.
+
+- **_clean_applicant_status(full_status_str, year):**
+  - Standardizes the applicant status (e.g., Accepted, Rejected) and extracts the decision date.
+  - Uses regex to find and format the date.
+
+- **save_data(data, filename):**
+  - Saves cleaned data to a JSON file with pretty formatting.
+
+- **load_data(filename):**
+  - Loads data from a JSON file for further analysis or processing.
+
+- **clean_data(agent, url, paths, min_results, max_pages_to_crawl, starting_page):**
+  - Main cleaning pipeline: calls `scrape_data`, then processes and standardizes each result.
+  - Builds a dictionary for each row with consistent keys and cleaned values.
+
+## Known Bugs and Limitations
+
+- **Fragile HTML Parsing:** The scraper relies on the current HTML structure of TheGradCafe survey pages. If the website changes its table or row structure, the scraper may fail or return incorrect data.
+- **Regex Assumptions:** The regex used for extracting degrees, GRE, and GPA scores assumes specific formats. Unusual or unexpected formats may not be parsed correctly.
+- **Date Parsing Errors:** If the date format on the site changes, `_convert_date_to_iso` may fail and default to the current year, potentially introducing inaccuracies.
