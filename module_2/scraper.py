@@ -2,7 +2,6 @@ import urllib3
 from urllib.parse import urljoin
 from urllib import robotparser
 from bs4 import BeautifulSoup
-import json
 
 def _get_robots_txt(agent:str, url:str, paths:list[str]) -> dict[str, bool]:
     """Fetches the robots.txt file for the given URL and checks if the provided
