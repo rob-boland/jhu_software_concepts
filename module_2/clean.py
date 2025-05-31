@@ -151,7 +151,7 @@ if __name__ == "__main__":
         agent="rob",
         url="https://www.thegradcafe.com/survey/",
         paths=["/", "/survey/"],
-        min_results=5000,
+        min_results=11000,
         max_pages_to_crawl=5000
     )
 
