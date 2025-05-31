@@ -1,8 +1,8 @@
-from urllib import parse, robotparser
-from urllib.request import urlopen
+from urllib.parse import urljoin
+from urllib import robotparser
 from bs4 import BeautifulSoup
 import json
-
+import urllib3
 
 
 def _get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
@@ -11,7 +11,7 @@ def _get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
     """
     # Create a robot parser and set the URL to robots.txt file
     parser = robotparser.RobotFileParser(url)
-    parser.set_url(parse.urljoin(url, "robots.txt"))
+    parser.set_url(urljoin(url, "robots.txt"))
     parser.read()
 
     allowed_paths = {}
@@ -89,14 +89,16 @@ def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_
     n_pages_crawled = 0
     n_surveys = 0
 
+    http = urllib3.PoolManager()
+
     while (n_surveys <= min_results) and (n_pages_crawled < max_pages_to_crawl):
         # Construct the URL for the current page
         page_url = f"{url}?page={page_number}"
 
         # Fetch the page content
         try:
-            response = urlopen(page_url)
-            soup = BeautifulSoup(response, "html.parser")
+            response = http.request('GET', page_url)
+            soup = BeautifulSoup(response.data, "html.parser")
         except Exception as e:
             print(f"Failed to fetch {page_url}: {e}")
             break
