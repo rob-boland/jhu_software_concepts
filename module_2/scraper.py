@@ -133,5 +133,5 @@ if __name__ == "__main__":
         max_pages_to_crawl=5
     )
 
-    with open("module_2/data/survey_data_working.json", "w") as f:
+    with open("module_2/applicant_data.json", "w") as f:
         json.dump(data, f, indent=4)
