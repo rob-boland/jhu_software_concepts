@@ -2,12 +2,9 @@ import json
 import re
 import datetime
 
-with open("module_2/data/survey_data_working.json", "r") as f:  
-    data = json.load(f)
+from scraper import scrape_data
 
-column_titles, results = data
-
-categories = {
+_categories = {
     "university",
     "program_name",
     "program_level",
@@ -62,19 +59,64 @@ def _clean_secondary_rows(row_data:list[str]) -> dict:
 
     return update_dict
 
-if __name__ == "__main__":
-    agent = "rob"
-    url = "https://www.thegradcafe.com/"
-    survey_url = f"{url}survey/"
-    paths = ["/", "/survey/"]
+def _convert_date_to_iso(date_str:str) -> tuple[str, int]:
+    """Convert date string to ISO format (YYYY-MM-DD). Returns a tuple of the date in ISO format and the year."""
+    try:
+        date_obj = datetime.datetime.strptime(date_str, "%b %d, %Y")
+        return (date_obj.strftime("%Y-%m-%d"), date_obj.year)
+    except ValueError:
+        return date_str  # Return original string if conversion fails
+    
+def _clean_applicant_status(status:str) -> str:
+    """Clean applicant status string to a standardized format."""
+    status = status.strip().lower()
+    if "accepted" in status:
+        return "Accepted"
+    elif "rejected" in status:
+        return "Rejected"
+    elif "waitlisted" in status:
+        return "Waitlisted"
+    elif "interviewed" in status:
+        return "Interviewed"
+    else:
+        return "Unknown"
+
+def save_data(data:list[dict], filename:str) -> None:
+    """Save the cleaned data to a JSON file."""
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=4)
+    
+    return None
+
+def load_data(filename:str) -> list[dict]:
+    """Load the cleaned data from a JSON file."""
+    with open(filename, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    return data
+
+def clean_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000, starting_page:int=1) -> list[dict]:
+    """Clean data scraped from the provided URL and paths, returning a list of dictionaries."""
+    
+    # Scrape data, separate into column titles and results
+    parsed_data = scrape_data(
+        agent=agent,
+        url=url,
+        paths=paths,
+        min_results=min_results,
+        max_pages_to_crawl=max_pages_to_crawl,
+        starting_page=starting_page
+    )
+
+    column_titles, results = parsed_data
 
     cleaned_results = []
     for result in results:
         try:
-            result_dict = {k:None for k in categories}
+            result_dict = {k:None for k in _categories}
             result_dict["university"] = result[0]
             result_dict["program_name"], result_dict["program_level"] = _separate_program_name_from_level(result[1])
-            result_dict["date_of_information_added"] = datetime.datetime.strptime(result[2], "%b %d, %Y")
+            result_dict["date_of_information_added"] = _convert_date_to_iso(result[2])
             result_dict["applicant_status"] = result[3]
             result_dict["url_link"] = f"{url}{result[4][1:]}"  # Remove leading slash
             result_dict["program_start_semester"] = result[6]
@@ -87,5 +129,18 @@ if __name__ == "__main__":
             cleaned_results.append(result_dict)
 
         except IndexError as e:
-            print("Improperly formatted result:", result)
+            # Improperly formatted row, potentially missing data.
             continue
+    
+    return cleaned_results
+
+if __name__ == "__main__":
+    cleaned_data = clean_data(
+        agent="rob",
+        url="https://www.thegradcafe.com/survey/",
+        paths=["/", "/survey/"],
+        min_results=50,
+        max_pages_to_crawl=5
+    )
+
+    save_data(cleaned_data, "module_2/data/cleaned_survey_data.json")

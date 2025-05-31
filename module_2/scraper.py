@@ -1,11 +1,10 @@
+import urllib3
 from urllib.parse import urljoin
 from urllib import robotparser
 from bs4 import BeautifulSoup
 import json
-import urllib3
 
-
-def _get_robots_txt(url:str, paths:list[str]) -> dict[str, bool]:
+def _get_robots_txt(agent:str, url:str, paths:list[str]) -> dict[str, bool]:
     """Fetches the robots.txt file for the given URL and checks if the provided
     paths are allowed for the given user agent.
     """
@@ -79,7 +78,7 @@ def _parse_rows(soup:BeautifulSoup) -> list[list[str]]:
 def scrape_data(agent:str, url:str, paths:list[str], min_results:int=10000, max_pages_to_crawl:int=10000, starting_page:int=1) -> tuple[list, list[list[str]]]:
     """Scrape survey data from the GradCafe website."""
     # Fetch robots.txt and check availabilty of paths
-    allowed_paths = _get_robots_txt(url, paths)
+    allowed_paths = _get_robots_txt(agent, url, paths)
     for path in allowed_paths:
         if not allowed_paths[path]:
             print(f"Path {path} is not allowed for user agent '{agent}'")
