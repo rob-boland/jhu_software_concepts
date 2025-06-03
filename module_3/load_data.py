@@ -30,26 +30,28 @@ def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="lo
         print(f"Error connecting to the database: {e}")
     return connection
 
-def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:dict, applicant_i:int=None) -> None:
+def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:dict, applicant_i:int) -> None:
     """Insert a new applicant record into the database.
     
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
         applicant_data (dict): Dictionary containing applicant data.
+        applicant_i (int): Index of the applicant in the data list. Used as primary key.
     """
     cursor = conn.cursor()
     insert_query = """
-    INSERT INTO applicants (program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+    INSERT INTO applicants (p_id, program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
 
     try:
         cursor.execute(insert_query, (
+            applicant_i,
             applicant_data['program_name'],
             applicant_data['comments'],
             applicant_data['date_of_information_added'],
             applicant_data['url_link'],
-            " on ".join(applicant_data['applicant_status']),
+            " on ".join(applicant_data['applicant_status']),  # Concatenate status with decision date
             applicant_data['program_start_semester'],
             applicant_data['nationality'],
             applicant_data['gpa'],
