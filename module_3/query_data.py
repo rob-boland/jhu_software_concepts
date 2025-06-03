@@ -69,6 +69,8 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
 
 
 if __name__ == "__main__":
+
+    # Load applicant data and database configuration from JSON files
     applicant_data_path = r"module_2\applicant_data.json"
     db_config_path = r"module_3\data\db_config.json"
     with open(applicant_data_path, 'r', encoding='utf-8') as file:
@@ -84,6 +86,7 @@ if __name__ == "__main__":
         db_host=db_config["db_host"],
         db_port=db_config["db_port"]
     )
+
     # for applicant_i, applicant in enumerate(applicant_data):
     #     # Insert each applicant record into the database
     #     print(f"Inserting applicant {applicant_i} of {len(applicant_data)}")
