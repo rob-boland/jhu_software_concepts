@@ -38,6 +38,7 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
         applicant_data (dict): Dictionary containing applicant data.
         applicant_i (int): Index of the applicant in the data list. Used as primary key.
     """
+    
     cursor = conn.cursor()
     insert_query = """
     INSERT INTO applicants (p_id, program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
