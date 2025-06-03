@@ -84,9 +84,10 @@ if __name__ == "__main__":
         db_host=db_config["db_host"],
         db_port=db_config["db_port"]
     )
-    # for applicant_i, applicant in enumerate(applicant_data):
-    #     # Insert each applicant record into the database
-    #     print(f"Inserting applicant {applicant_i} of {len(applicant_data)}")
-    #     insert_applicant_record(conn, applicant, applicant_i)
+
+    for applicant_i, applicant in enumerate(applicant_data):
+        # Insert each applicant record into the database
+        print(f"Inserting applicant {applicant_i} of {len(applicant_data)}")
+        insert_applicant_record(conn, applicant, applicant_i)
 
     conn.close()
