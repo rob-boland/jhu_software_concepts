@@ -264,7 +264,8 @@ if __name__ == "__main__":
     gre_aw_avg = compute_average_of_column(conn, "gre_aw")
     us_fall_2024_gpa = compute_conditional_average_of_column(conn, "gpa", "us_or_international", "American", table=fall_2024_view)
     fall_24_accepted = compute_accpetance_percentages(conn, table=fall_2024_view)
-    fall_24_avg_gpa = compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
+    fall_24_avg__accepted_gpa = compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
+    print(fall_24_avg__accepted_gpa)
 
 
 

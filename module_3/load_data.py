@@ -38,7 +38,7 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
         applicant_data (dict): Dictionary containing applicant data.
         applicant_i (int): Index of the applicant in the data list. Used as primary key.
     """
-    
+
     cursor = conn.cursor()
     insert_query = """
     INSERT INTO applicants (p_id, program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
@@ -48,7 +48,7 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
     try:
         cursor.execute(insert_query, (
             applicant_i,
-            applicant_data['program_name'],
+            f"{applicant_data['university']} : {applicant_data['program_name']}",
             applicant_data['comments'],
             applicant_data['date_of_information_added'],
             applicant_data['url_link'],
@@ -76,6 +76,8 @@ if __name__ == "__main__":
         applicant_data = json.load(file)
     with open(db_config_path, 'r', encoding='utf-8') as file:
         db_config = json.load(file)
+    
+    print(applicant_data[0])
 
     # Create a connection to the PostgreSQL database
     conn = create_connection(
