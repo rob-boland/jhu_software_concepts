@@ -157,7 +157,6 @@ def compute_accpetance_percentages(conn: psycopg2.extensions.connection, table:s
     cursor.execute(count_query)
     count = cursor.fetchone()[0]
 
-
     # Count accepted applicnats
     accpeted_query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE status LIKE %s").format(
             table=sql.Identifier(table),
