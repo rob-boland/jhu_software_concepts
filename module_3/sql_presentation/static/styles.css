@@ -65,3 +65,38 @@
     padding-left: 10px;
     max-width: 90%;
   }
+
+  .responses-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 30px 0 0 0;
+}
+
+.response-block {
+  background: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 18px 24px;
+  transition: background 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.response-block:hover {
+  background: #e8eef7;
+}
+
+.response-title {
+  font-weight: 700;
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #223366;
+}
+
+.response-content {
+  font-weight: 400;
+  font-size: 1em;
+  color: #222;
+}

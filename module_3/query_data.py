@@ -74,7 +74,7 @@ def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
 
     return percentage_dict
 
-def compute_average_of_column(conn: psycopg2.extensions.connection, column:str, table:str='applicants') -> float:
+def compute_average_of_column(conn: psycopg2.extensions.connection, column:str, table:str='applicants', rounding:int=2) -> float:
     """Compute the average (mean) of a column.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -103,10 +103,10 @@ def compute_average_of_column(conn: psycopg2.extensions.connection, column:str, 
         print(f"Unable to compute average for text based column:\n\n{e}")
         return None
 
-    return avg
+    return round(avg, rounding)
 
 def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str,
-                                          where_condition:str, table:str='applicants') -> float:
+                                          where_condition:str, table:str='applicants', rounding:int=2) -> float:
     """Compute the average (mean) of a column given a 'WHERE' condition.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -138,7 +138,7 @@ def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, 
         print(f"Unable to compute average for text based column:\n\n{e}")
         return None
 
-    return avg
+    return round(avg, rounding)
 
 def compute_accpetance_percentages(conn: psycopg2.extensions.connection, table:str='applicants') -> float:
     """Compute percentage of accpetances.
@@ -203,7 +203,7 @@ def create_semester_view(conn: psycopg2.extensions.connection, semester: str, re
     return view_name
 
 def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str,
-                                    where_condition:str, table:str='applicants') -> float:
+                                    where_condition:str, table:str='applicants', rounding:int=2) -> float:
     """Compute the average (mean) of a column given a 'WHERE LIKE' condition.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -235,7 +235,7 @@ def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column
         print(f"Unable to compute average for text based column:\n\n{e}")
         return None
 
-    return avg
+    return round(avg, rounding)
 
 def count_university_program(conn: psycopg2.extensions.connection, university:str,
                              program:str, table:str="applicants"):

@@ -1,32 +1,16 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Home{% endblock title %}</h1>
+  <h1>{% block title %}Grad Cafe Data Analysis{% endblock title %}</h1>
 {% endblock header %}
 
 {% block content %}
-<!-- Container for bio with information on left and picture on right. -->
-  <div class="bio-container">
-    <div class="bio-headers">
-      <h2>Jon Robert (Rob) Boland</h2>
-      <h3>Aviator at U.S. Army</h3>
-      <p class="bio-content">
-        Jon Robert (Rob) Boland is a graduate student at Johns Hopkins University in the M.S. in Data Science program.
-        He currently serves in the U.S. Army as a rotary wing aviator and Aviation Mission Survivabiliy Officer. His focus area is
-        integrating data analytics into Army aviation training programs.
-      </p>
-    </div>
-    <div>
-      <p>Placeholder</p>
-    </div>
+  <div class="responses-container">
+    {% for key, value in responses.items() %}
+      <div class="response-block">
+        <h3 class="response-title">{{ key.replace('_', ' ').title() }}</h3>
+        <div class="response-content">{{ value }}</div>
+      </div>
+    {% endfor %}
   </div>
-  <div class="data-series">
-  {% for item in data_series %}
-    <div class="data-container">
-      <h4>{{ item.title }}</h4>
-      <p>{{ item.description }}</p>
-      <!-- Add more fields as needed -->
-    </div>
-  {% endfor %}
-</div>
 {% endblock content %}
