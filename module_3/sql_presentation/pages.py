@@ -35,17 +35,17 @@ def home():
     fall_2024_view = query_data.create_semester_view(conn, "Fall 2024", replace=False)
 
     # Query database to pull reponses into Flask
-    query_responses["n_fall_2024"] = query_data.count_semester_entries(conn, "Fall 2024")
-    query_responses["international_percentages"] = query_data.compute_percentage_of_distinct_entries(
+    query_responses["Fall 2024 Applicants:"] = query_data.count_semester_entries(conn, "Fall 2024")
+    query_responses["Percentage of International Applicants"] = query_data.compute_percentage_of_distinct_entries(
         conn, "us_or_international")['International']
-    query_responses["gpa_avg"] = query_data.compute_average_of_column(conn, "gpa")
-    query_responses["gre_avg"] = query_data.compute_average_of_column(conn, "gre")
-    query_responses["gre_v_avg"] = query_data.compute_average_of_column(conn, "gre_v")
-    query_responses["gre_aw_avg"] = query_data.compute_average_of_column(conn, "gre_aw")
-    query_responses["us_fall_2024_gpa"] = query_data.compute_conditional_average_of_column(conn, "gpa", "us_or_international", "American", table=fall_2024_view)
-    query_responses["fall_24_accepted"] = query_data.compute_accpetance_percentages(conn, table=fall_2024_view)
-    query_responses["fall_24_avg__accepted_gpa"] = query_data.compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
-    query_responses["jhu_cs_count"] = query_data.count_university_program(conn, "Johns Hopkins", "Computer Science")
+    query_responses["Average GPA"] = query_data.compute_average_of_column(conn, "gpa")
+    query_responses["Average GRE"] = query_data.compute_average_of_column(conn, "gre")
+    query_responses["Average GRE V"] = query_data.compute_average_of_column(conn, "gre_v")
+    query_responses["Average GRE AW"] = query_data.compute_average_of_column(conn, "gre_aw")
+    query_responses["Average GPA of US applicants for Fall 2024"] = query_data.compute_conditional_average_of_column(conn, "gpa", "us_or_international", "American", table=fall_2024_view)
+    query_responses["Percentage of Fall 2024 applicants accepted"] = query_data.compute_accpetance_percentages(conn, table=fall_2024_view)
+    query_responses["Average GPA of accepted Fall 2024 applicants"] = query_data.compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
+    query_responses["Number of applicants to JHU Computer Science programs"] = query_data.count_university_program(conn, "Johns Hopkins", "Computer Science")
 
     test = query_data.count_semester_entries(conn, "Fall 2024")
     print(test)

@@ -8,7 +8,7 @@
   <div class="responses-container">
     {% for key, value in responses.items() %}
       <div class="response-block">
-        <h3 class="response-title">{{ key.replace('_', ' ').title() }}</h3>
+        <h3 class="response-title">{{ key.replace('_', ' ') }}:</h3>
         <div class="response-content">{{ value }}</div>
       </div>
     {% endfor %}
