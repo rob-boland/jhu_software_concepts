@@ -20,4 +20,13 @@
       <p>Placeholder</p>
     </div>
   </div>
+  <div class="data-series">
+  {% for item in data_series %}
+    <div class="data-container">
+      <h4>{{ item.title }}</h4>
+      <p>{{ item.description }}</p>
+      <!-- Add more fields as needed -->
+    </div>
+  {% endfor %}
+</div>
 {% endblock content %}
