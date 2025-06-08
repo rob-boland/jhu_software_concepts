@@ -25,7 +25,7 @@ def count_semester_entries(conn: psycopg2.extensions.connection, semester: str) 
 
     return count
 
-def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection, column: str) -> float:
+def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection, column: str, table:str="applicants") -> float:
     """Compute the percentage of distinct entries for a given column.
     
     Args:
@@ -39,16 +39,18 @@ def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
     cursor = conn.cursor()
 
     # Sanitized query for distinct entries of specified column
-    query = sql.SQL("SELECT DISTINCT({field}) FROM applicants;").format(
-        field=sql.Identifier(column)
+    query = sql.SQL("SELECT DISTINCT({field}) FROM {table};").format(
+        field=sql.Identifier(column),
+        table=sql.Identifier(table)
     )
     cursor.execute(query)
     result = cursor.fetchall()
     distinct_entries = [x[0] for x in result] if result else None
 
     # Total number of records in table
-    query = sql.SQL("SELECT COUNT({field}) FROM applicants;").format(
-        field=sql.Identifier(column)
+    query = sql.SQL("SELECT COUNT({field}) FROM {table};").format(
+        field=sql.Identifier(column),
+        table=sql.Identifier(table)
     )
     cursor.execute(query)
     total_records = cursor.fetchone()[0]
@@ -56,8 +58,9 @@ def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
     # Count occurrences of each distinct entry
     distinct_dict = dict()
     for entry in distinct_entries:
-        query = sql.SQL("SELECT COUNT(*) FROM applicants WHERE {field} = %s;").format(
-            field=sql.Identifier(column)
+        query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE {field} = %s;").format(
+            field=sql.Identifier(column),
+            table=sql.Identifier(table)
         )
         cursor.execute(query, (entry,))
         count = cursor.fetchone()[0]
@@ -102,8 +105,8 @@ def compute_average_of_column(conn: psycopg2.extensions.connection, column:str, 
 
     return avg
 
-def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str, where_condition:str,
-                                          table:str='applicants') -> float:
+def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str,
+                                          where_condition:str, table:str='applicants') -> float:
     """Compute the average (mean) of a column given a 'WHERE' condition.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -137,7 +140,7 @@ def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, 
 
     return avg
 
-def compute_accpetance_percentages(conn: psycopg2.extensions.connection, table:str='applicants') -> int:
+def compute_accpetance_percentages(conn: psycopg2.extensions.connection, table:str='applicants') -> float:
     """Compute percentage of accpetances.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -199,8 +202,8 @@ def create_semester_view(conn: psycopg2.extensions.connection, semester: str, re
     
     return view_name
 
-def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str, where_condition:str,
-                                          table:str='applicants') -> float:
+def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column:str, where_col:str,
+                                    where_condition:str, table:str='applicants') -> float:
     """Compute the average (mean) of a column given a 'WHERE LIKE' condition.
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
@@ -222,6 +225,41 @@ def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column
             conditional_column=sql.Identifier(where_col),
         )
         cursor.execute(query, (where_condition,))
+        avg = cursor.fetchall()[0][0]
+        cursor.close()
+
+    # Handle errors if trying to average a text-based column
+    except psycopg2.errors.UndefinedFunction as e:
+        conn.rollback()
+        cursor.close()
+        print(f"Unable to compute average for text based column:\n\n{e}")
+        return None
+
+    return avg
+
+def count_university_program(conn: psycopg2.extensions.connection, university:str,
+                             program:str, table:str="applicants"):
+    """Count the number of entries that applied to a given university/program. Do not need to include % in the strings.
+    Args:
+        conn (psycopg2.extensions.connection): Database connection object.
+        university (str): Name of university to be searched for
+        program (str): Name of degree program to be searched for
+        
+    Returns:
+        average: The average (mean) of entries for the specified column.
+    """
+
+    cursor = conn.cursor()
+
+    university_fuzzy = f"%{university}%"
+    program_fuzzy = f"%{program}%"
+
+    # Sanitized query to select count of entries from a given program
+    try:
+        query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE program LIKE %s AND program LIKE %s;").format(
+            table=sql.Identifier(table),
+        )
+        cursor.execute(query, (university_fuzzy, program_fuzzy))
         avg = cursor.fetchall()[0][0]
         cursor.close()
 
@@ -265,7 +303,7 @@ if __name__ == "__main__":
     us_fall_2024_gpa = compute_conditional_average_of_column(conn, "gpa", "us_or_international", "American", table=fall_2024_view)
     fall_24_accepted = compute_accpetance_percentages(conn, table=fall_2024_view)
     fall_24_avg__accepted_gpa = compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
-    print(fall_24_avg__accepted_gpa)
+    jhu_cs_count = count_university_program(conn, "Johns Hopkins", "Computer Science")
 
 
 
