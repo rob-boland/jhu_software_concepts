@@ -1,7 +1,7 @@
 from flask import Flask
 
 # Module imports
-from boland_website import pages
+from sql_presentation import pages
 
 def create_app():
     """Create and configure the Flask application."""
