@@ -305,6 +305,16 @@ if __name__ == "__main__":
     fall_24_avg__accepted_gpa = compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
     jhu_cs_count = count_university_program(conn, "Johns Hopkins", "Computer Science")
 
+    print(f"""1. Applicant count:   {n_fall_2024}
+2. International percentage:   {international_percentages}%
+3. Average GPA:   {gpa_avg}, Average GRE:{gre_avg},
+Average GRE V: {gre_v_avg}, Average GRE AW: {gre_aw_avg}
+4. Average US Fall 2024 GPA:   {us_fall_2024_gpa}
+5. Percentage of Fall 2024 Acceptances:   {fall_24_accepted}%
+6. Average GPA of Fall 2024 Acceptances:   {fall_24_avg__accepted_gpa}
+7. Entries for JHU Computer Science Applicants:   {jhu_cs_count}
+""")
+
 
 
     
