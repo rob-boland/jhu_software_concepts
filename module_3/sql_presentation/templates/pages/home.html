@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Grad Cafe Data Analysis{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+  <div class="responses-container">
+    {% for key, value in responses.items() %}
+      <div class="response-block">
+        <h3 class="response-title">{{ key.replace('_', ' ') }}:</h3>
+        <div class="response-content">{{ value }}</div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock content %}
