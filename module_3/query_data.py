@@ -1,6 +1,5 @@
 import json
 import psycopg2
-from psycopg2 import OperationalError
 from psycopg2 import sql
 
 from load_data import create_connection
@@ -314,9 +313,5 @@ Average GRE V: {gre_v_avg}, Average GRE AW: {gre_aw_avg}
 6. Average GPA of Fall 2024 Acceptances:   {fall_24_avg__accepted_gpa}
 7. Entries for JHU Computer Science Applicants:   {jhu_cs_count}
 """)
-
-
-
-    
 
     conn.close()

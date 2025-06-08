@@ -76,8 +76,6 @@ if __name__ == "__main__":
         applicant_data = json.load(file)
     with open(db_config_path, 'r', encoding='utf-8') as file:
         db_config = json.load(file)
-    
-    print(applicant_data[0])
 
     # Create a connection to the PostgreSQL database
     conn = create_connection(

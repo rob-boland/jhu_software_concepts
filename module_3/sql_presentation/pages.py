@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template
 
+# SQL and config imports
 import psycopg2
 import json
 
+# Intra-package imports
 from load_data import create_connection
 import query_data
 
@@ -26,11 +28,10 @@ def get_db_connection() -> psycopg2.extensions.connection:
 # Define routes for each page
 @bp.route("/")
 def home():
-
+    # Empty dictionary to store query responses
     query_responses = {}
 
     conn = get_db_connection()
-
     # Build view for semester-specific queries
     fall_2024_view = query_data.create_semester_view(conn, "Fall 2024", replace=False)
 
@@ -47,7 +48,6 @@ def home():
     query_responses["Average GPA of accepted Fall 2024 applicants"] = query_data.compute_fuzzy_average_of_column(conn, "gpa", "status", "Accepted%", table=fall_2024_view)
     query_responses["Number of applicants to JHU Computer Science programs"] = query_data.count_university_program(conn, "Johns Hopkins", "Computer Science")
 
-    test = query_data.count_semester_entries(conn, "Fall 2024")
-    print(test)
+    conn.close()
 
     return render_template("pages/home.html", responses=query_responses)
