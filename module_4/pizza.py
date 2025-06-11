@@ -1,5 +1,3 @@
-
-
 class Pizza:
     cost_structure = {
         "crust": {
@@ -63,7 +61,3 @@ class Pizza:
             print("Unknown ingredient", e)
 
         return self.total_cost
-
-pizza_0 = Pizza("thin", ["Liv Sauce", "marinara"], "mozzarella", ["pepperoni", "mushrooms"])
-print(pizza_0)
-
