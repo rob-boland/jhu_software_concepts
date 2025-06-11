@@ -21,8 +21,15 @@ class Pizza:
             "mozzarella": 0
         }
     }
-    def __init__(self, crust:str, sauce:list[str], cheese:str, toppings:list[str]):
-        """Build Pizza with one crust, one cheese, multiple sauces, and multiple toppings"""
+    def __init__(self, crust:str, sauce:list[str], toppings:list[str], cheese:str="mozzarella"):
+        """Build Pizza with one crust, one cheese, multiple sauces, and multiple toppings.
+
+        Args:
+            crust (str): The type of crust (e.g., 'thin', 'thick', 'gluten_free').
+            sauce (list[str]): List of sauces to add to the pizza.
+            cheese (str): The type of cheese (e.g., 'mozzarella').
+            toppings (list[str]): List of toppings to add to the pizza.
+        """
         self.crust = ("crust", crust)
         self.cheese = ("cheese", cheese)
         self.sauce = [("sauce", s) for s in sauce]
@@ -36,10 +43,15 @@ class Pizza:
         cheese = self.cheese[1].title()
         sauces = [s[1].title() for s in self.sauce]
         toppings = [t[1].title() for t in self.toppings]
+
         return f"Crust: {crust}, Cheese: {cheese}, Sauce(s): {sauces}, Topping(s): {toppings}\nTotal cost: ${self.cost()}"
 
-
     def cost(self) -> int:
+        """Calculate the total cost of the pizza based on the cost_structure.
+
+        Returns:
+            self.total_cost (int): The total cost of the pizza.
+        """
         self.total_cost = 0
 
         try:
