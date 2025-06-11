@@ -1,5 +1,5 @@
 # Intra-package imports
-from pizza import Pizza
+from module_4.pizza import Pizza
 
 class Order:
     def __init__(self):
@@ -18,7 +18,7 @@ class Order:
 
     def __str__(self):
         pizzas_str = "\n".join(self.cart)
-        return f"{len(self.cart)} with a total cost of {self.cost}\n{pizzas_str}"
+        return f"Customer Requested:\n{pizzas_str}"
 
     def input_pizza(self, crust:str, sauce:list[str], toppings:list[str], cheese:str="mozzarella"):
         """Add a pizza to the order with the specified ingredients.
@@ -49,6 +49,7 @@ class Order:
         self.balance += payment
 
         return self.balance
+
     def order_paid(self) -> bool:
         """Check if the order has been fully paid.
 
