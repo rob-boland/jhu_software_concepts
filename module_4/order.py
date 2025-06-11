@@ -15,9 +15,10 @@ class Order:
         self.cost = 0
         self.balance = 0
         self.cart = list()
+        self.payment_made = False
 
     def __str__(self):
-        pizzas_str = "\n".join(self.cart)
+        pizzas_str = "\n".join([str(pizza) for pizza in self.cart])
         return f"Customer Requested:\n{pizzas_str}"
 
     def input_pizza(self, crust:str, sauce:list[str], toppings:list[str], cheese:str="mozzarella"):
@@ -47,6 +48,7 @@ class Order:
             int: The updated balance after payment.
         """
         self.balance += payment
+        self.payment_made = True
 
         return self.balance
 
@@ -56,7 +58,7 @@ class Order:
         Returns:
             bool: True if the balance is zero, False otherwise.
         """
-        if self.balance == 0:
+        if self.balance == 0 and self.payment_made:
             return True
         else:
             print(f"Please pay {self.balance} to close out your order!")

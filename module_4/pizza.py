@@ -28,12 +28,12 @@ class Pizza:
             cheese (str): The type of cheese (e.g., 'mozzarella').
             toppings (list[str]): List of toppings to add to the pizza.
         """
-        self.crust = ("crust", crust)
-        self.cheese = ("cheese", cheese)
-        self.sauce = [("sauce", s) for s in sauce]
-        self.toppings = [("toppings", t) for t in toppings]
+        self.crust = crust
+        self.cheese = cheese
+        self.sauce = sauce
+        self.toppings = toppings
 
-        self.ingredients = [self.crust, self.cheese, *self.sauce, *self.toppings]
+        self.ingredients = [("crust", self.crust), ("cheese", self.cheese), *[("sauce", s) for s in self.sauce], *[("toppings", t) for t in self.toppings]]
 
         self.total_cost = self.cost()
 
