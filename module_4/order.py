@@ -56,10 +56,11 @@ class Order:
         """Check if the order has been fully paid.
 
         Returns:
-            bool: True if the balance is zero, False otherwise.
+            self.paid: True if the balance is zero, False otherwise.
         """
         if self.balance == 0 and self.payment_made:
-            return True
+            self.paid = True
         else:
             print(f"Please pay {self.balance} to close out your order!")
-            return False
+            self.paid = False
+        return self.paid

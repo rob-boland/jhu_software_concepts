@@ -60,7 +60,30 @@ def test_order_init():
     assert not blank_order.order_paid()
 
 def test_order__str__(example_orders):
+    # Test against pizzas given in assignment instructions
     assert str(example_orders[0]) == \
     "Customer Requested:\nCrust: thin, Sauce: ['pesto'], Cheese: mozzarella, Toppings: ['mushrooms'], Cost: 11\nCrust: thick, Sauce: ['marinara'], Cheese: mozzarella, Toppings: ['mushrooms'], Cost: 11"
     assert str(example_orders[1]) == \
     "Customer Requested:\nCrust: gluten_free, Sauce: ['marinara'], Cheese: mozzarella, Toppings: ['pineapple'], Cost: 11\nCrust: thin, Sauce: ['liv_sauce', 'pesto'], Cheese: mozzarella, Toppings: ['mushrooms', 'pepperoni'], Cost: 18"
+
+def test_input_pizza_updates_cost():
+    order = Order()
+    # Add a pizza with known cost: thin (5) + pesto (3) + mozzarella (0) + mushrooms (3) = 11
+    order.input_pizza(crust="thin", sauce=["pesto"], toppings=["mushrooms"], cheese="mozzarella")
+    assert order.cost == 11
+    # Add another pizza: thick (6) + marinara (2) + mozzarella (0) + mushrooms (3) + pineapple (1) = 12
+    order.input_pizza(crust="thick", sauce=["marinara"], toppings=["mushrooms", "pineapple"], cheese="mozzarella")
+    assert order.cost == 23
+
+def test_order_paid_behavior():
+    order = Order()
+    # Add a pizza with cost 11
+    order.input_pizza(crust="thin", sauce=["pesto"], toppings=["mushrooms"], cheese="mozzarella")
+    # Not paid yet
+    assert not order.order_paid()
+    # Pay less than total
+    order.pay_for_order(5)
+    assert not order.order_paid()
+    # Pay the rest
+    order.pay_for_order(6)
+    assert order.order_paid()
