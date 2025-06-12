@@ -2,7 +2,6 @@ import pytest
 
 # Intra-package imports
 from module_4.order import Order
-from module_4.pizza import Pizza
 
 @pytest.fixture
 def example_orders():
