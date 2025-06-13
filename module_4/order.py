@@ -1,7 +1,7 @@
 # Intra-package imports
 try:
     from pizza import Pizza
-except ModuleNotFoundError as e:  # for pytest to work
+except ModuleNotFoundError as e:  # for pytest to work since it lives in a higher-level directory
     from module_4.pizza import Pizza
 
 class Order:
