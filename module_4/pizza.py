@@ -19,7 +19,7 @@ class Pizza:
             "mozzarella": 0
         }
     }
-    def __init__(self, crust:str, sauce:list[str], cheese:str, toppings:list[str]):
+    def __init__(self, crust:str, sauce:list[str], toppings:list[str], cheese:str="mozzarella"):
         """
         Build a Pizza with one crust, one cheese, multiple sauces, and multiple toppings.
 
@@ -32,13 +32,12 @@ class Pizza:
         :param cheese: The type of cheese, defaults to 'mozzarella'
         :type cheese: str, optional
         """
-        self.crust = ("crust", crust)
-        self.cheese = ("cheese", cheese)
-        self.sauce = [("sauce", s) for s in sauce]
-        
-        self.toppings = [("toppings", t) for t in toppings]
+        self.crust = crust
+        self.cheese = cheese
+        self.sauce = sauce
+        self.toppings = toppings
 
-        self.ingredients = [self.crust, self.cheese, *self.sauce, *self.toppings]
+        self.ingredients = [("crust", crust), ("cheese", cheese), *[("sauce", s) for s in sauce], *[("toppings", t) for t in toppings]]
 
     def __str__(self):
         """
@@ -47,12 +46,12 @@ class Pizza:
         :return: String describing the pizza and its cost
         :rtype: str
         """
-        crust = self.crust[1].title()
-        cheese = self.cheese[1].title()
-        sauces = [s[1].title() for s in self.sauce]
-        toppings = [t[1].title() for t in self.toppings]
+        crust = self.crust
+        cheese = self.cheese
+        sauces = [s for s in self.sauce]
+        toppings = [t for t in self.toppings]
 
-        return f"Crust: {crust}, Cheese: {cheese}, Sauce(s): {sauces}, Topping(s): {toppings}\nTotal cost: ${self.cost()}"
+        return f"Crust: {crust}, Sauce: {sauces}, Cheese: {cheese}, Toppings: {toppings}, Cost: {self.cost()}"
 
     def cost(self) -> int:
         """
@@ -72,7 +71,3 @@ class Pizza:
             print("Unknown ingredient", e)
 
         return self.total_cost
-
-pizza_0 = Pizza("thin", ["Liv Sauce", "marinara"], "mozzarella", ["pepperoni", "mushrooms"])
-print(pizza_0)
-

@@ -1,5 +1,8 @@
 # Intra-package imports
-from pizza import Pizza
+try:
+    from pizza import Pizza
+except ModuleNotFoundError as e:  # for pytest to work
+    from module_4.pizza import Pizza
 
 class Order:
     def __init__(self):
