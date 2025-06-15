@@ -1,8 +1,22 @@
+"""
+This module provides functionality for loading applicant data from a JSON file and inserting it
+into a PostgreSQL database.
+
+Functions:
+- create_connection: Establishes a connection to the PostgreSQL database.
+- insert_applicant_record: Inserts an applicant record into the database.
+
+Usage:
+Run this module as a script to load applicant data from a JSON file and insert it into the
+database.
+"""
+
 import json
 import psycopg2
 from psycopg2 import OperationalError
 
-def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="localhost", db_port:int=5432) -> psycopg2.extensions.connection:
+def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="localhost",
+                      db_port:int=5432) -> psycopg2.extensions.connection:
     """Create a database connection to the PostgreSQL database specified by the
     connection parameters.
     
@@ -30,7 +44,8 @@ def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="lo
         print(f"Error connecting to the database: {e}")
     return connection
 
-def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:dict, applicant_i:int) -> None:
+def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:dict,
+                            applicant_i:int) -> None:
     """Insert a new applicant record into the database.
     
     Args:
@@ -52,7 +67,7 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
             applicant_data['comments'],
             applicant_data['date_of_information_added'],
             applicant_data['url_link'],
-            " on ".join(applicant_data['applicant_status']),  # Concatenate status with decision date
+            " on ".join(applicant_data['applicant_status']),  # Concat status with decision date
             applicant_data['program_start_semester'],
             applicant_data['nationality'],
             applicant_data['gpa'],
@@ -70,11 +85,11 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
 
 
 if __name__ == "__main__":
-    applicant_data_path = r"module_2\applicant_data.json"
-    db_config_path = r"module_3\data\db_config.json"
-    with open(applicant_data_path, 'r', encoding='utf-8') as file:
+    APPLICANT_DATA_PATH = r"module_2\applicant_data.json"
+    DB_CONFIG_PATH = r"module_3\data\db_config.json"
+    with open(APPLICANT_DATA_PATH, 'r', encoding='utf-8') as file:
         applicant_data = json.load(file)
-    with open(db_config_path, 'r', encoding='utf-8') as file:
+    with open(DB_CONFIG_PATH, 'r', encoding='utf-8') as file:
         db_config = json.load(file)
 
     # Create a connection to the PostgreSQL database
