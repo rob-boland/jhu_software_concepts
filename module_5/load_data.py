@@ -44,8 +44,8 @@ def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="lo
         print(f"Error connecting to the database: {e}")
     return connection
 
-def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:dict,
-                            applicant_i:int) -> None:
+def insert_applicant_record(connection:psycopg2.extensions.connection, applicant_data_dict:dict,
+                            applicant_number:int) -> None:
     """Insert a new applicant record into the database.
     
     Args:
@@ -54,7 +54,7 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
         applicant_i (int): Index of the applicant in the data list. Used as primary key.
     """
 
-    cursor = conn.cursor()
+    cursor = connection.cursor()
     insert_query = """
     INSERT INTO applicants (p_id, program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -62,24 +62,24 @@ def insert_applicant_record(conn:psycopg2.extensions.connection, applicant_data:
 
     try:
         cursor.execute(insert_query, (
-            applicant_i,
-            f"{applicant_data['university']} : {applicant_data['program_name']}",
-            applicant_data['comments'],
-            applicant_data['date_of_information_added'],
-            applicant_data['url_link'],
-            " on ".join(applicant_data['applicant_status']),  # Concat status with decision date
-            applicant_data['program_start_semester'],
-            applicant_data['nationality'],
-            applicant_data['gpa'],
-            applicant_data['gre_score'],
-            applicant_data['gre_v_score'],
-            applicant_data['gre_aw_score'],
-            applicant_data['program_level']
+            applicant_number,
+            f"{applicant_data_dict['university']} : {applicant_data_dict['program_name']}",
+            applicant_data_dict['comments'],
+            applicant_data_dict['date_of_information_added'],
+            applicant_data_dict['url_link'],
+            " on ".join(applicant_data_dict['applicant_status']),  # Concat status w/ decision date
+            applicant_data_dict['program_start_semester'],
+            applicant_data_dict['nationality'],
+            applicant_data_dict['gpa'],
+            applicant_data_dict['gre_score'],
+            applicant_data_dict['gre_v_score'],
+            applicant_data_dict['gre_aw_score'],
+            applicant_data_dict['program_level']
         ))
-        conn.commit()
-    except Exception as e:
-        print(f"Error inserting record: {e} on applicant number {applicant_i}")
-        conn.rollback()
+        connection.commit()
+    except psycopg2.OperationalError as e:
+        print(f"Error inserting record: {e} on applicant number {applicant_number}")
+        connection.rollback()
     finally:
         cursor.close()
 
