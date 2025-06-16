@@ -36,7 +36,10 @@ def count_semester_entries(conn: psycopg2.extensions.connection, semester: str) 
 
     cursor = conn.cursor()
 
-    query = """SELECT COUNT(*) FROM applicants WHERE term = %s;"""
+    query = sql.SQL("""SELECT COUNT({field}) FROM {table} WHERE term = %s;""").format(
+        field=sql.Identifier("*"),
+        table=sql.Identifier("applicants")
+    )
     cursor.execute(query, (semester,))
     count = cursor.fetchone()[0]
 
