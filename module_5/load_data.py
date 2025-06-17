@@ -14,6 +14,7 @@ database.
 import json
 import psycopg2
 from psycopg2 import OperationalError
+from psycopg2 import sql
 
 def create_connection(db_name:str, db_user:str, db_password:str, db_host:str="localhost",
                       db_port:int=5432) -> psycopg2.extensions.connection:
@@ -54,11 +55,19 @@ def insert_applicant_record(connection:psycopg2.extensions.connection, applicant
         applicant_i (int): Index of the applicant in the data list. Used as primary key.
     """
 
+    column_names = ["p_id", "program", "comments", "date_added", "url", "status", "term",
+                    "us_or_international", "gpa", "gre", "gre_v", "gre_aw", "degree"]
+    column_identifiers = [sql.Identifier(col) for col in column_names]
+
     cursor = connection.cursor()
-    insert_query = """
-    INSERT INTO applicants (p_id, program, comments, date_added, url, status, term, us_or_international, gpa, gre, gre_v, gre_aw, degree)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-    """
+
+    insert_query = sql.SQL(
+        "INSERT INTO {table} ({fields}) VALUES ({p_holders});"
+    ).format(
+        table=sql.Identifier("applicants"),
+        fields = sql.SQL(", ").join(column_identifiers),
+        p_holders = sql.SQL(", ").join(sql.Placeholder() * 13)  # 13 column vals to insert
+    )
 
     try:
         cursor.execute(insert_query, (
@@ -85,20 +94,20 @@ def insert_applicant_record(connection:psycopg2.extensions.connection, applicant
 
 
 if __name__ == "__main__":
-    APPLICANT_DATA_PATH = r"module_2\applicant_data.json"
-    DB_CONFIG_PATH = r"module_3\data\db_config.json"
-    with open(APPLICANT_DATA_PATH, 'r', encoding='utf-8') as file:
+    APPLICANT_DATA = r"module_2\applicant_data.json"
+    DB_CONFIG = r"module_3\data\db_config.json"
+    with open(APPLICANT_DATA, 'r', encoding='utf-8') as file:
         applicant_data = json.load(file)
-    with open(DB_CONFIG_PATH, 'r', encoding='utf-8') as file:
-        db_config = json.load(file)
+    with open(DB_CONFIG, 'r', encoding='utf-8') as file:
+        config = json.load(file)
 
     # Create a connection to the PostgreSQL database
     conn = create_connection(
-        db_name=db_config["db_name"],
-        db_user=db_config["db_user"],
-        db_password=db_config["db_password"],
-        db_host=db_config["db_host"],
-        db_port=db_config["db_port"]
+        db_name=config["db_name"],
+        db_user=config["db_user"],
+        db_password=config["db_password"],
+        db_host=config["db_host"],
+        db_port=config["db_port"]
     )
 
     for applicant_i, applicant in enumerate(applicant_data):
