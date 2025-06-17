@@ -36,7 +36,9 @@ def count_semester_entries(conn: psycopg2.extensions.connection, semester: str) 
 
     cursor = conn.cursor()
 
-    query = sql.SQL("""SELECT COUNT(*) FROM {table} WHERE term = %s;""").format(
+    # Inherent limit: 1. There should be no need for more than 1 return
+    query = sql.SQL("""SELECT COUNT(*) FROM {table} WHERE term = %s
+                    LIMIT 1;""").format(
         table=sql.Identifier("applicants")
     )
     cursor.execute(query, (semester,))
@@ -47,12 +49,15 @@ def count_semester_entries(conn: psycopg2.extensions.connection, semester: str) 
     return count
 
 def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
-                                           column: str, table:str="applicants") -> float:
+                                           column: str, table:str="applicants",
+                                           limit:int=1000) -> float:
     """Compute the percentage of distinct entries for a given column.
     
     Args:
         conn (psycopg2.extensions.connection): Database connection object.
         column (str): The column to compute the percentage of distinct entries for.
+        table (str): PostgreSQL table
+        limit (int): Max distinct records to process
         
     Returns:
         percentage: The percentage of each distinct entry in the specified column.
@@ -61,30 +66,30 @@ def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
     cursor = conn.cursor()
 
     # Sanitized query for distinct entries of specified column
-    query = sql.SQL("SELECT DISTINCT({field}) FROM {table};").format(
+    query = sql.SQL("SELECT DISTINCT({field}) FROM {table} LIMIT %s;").format(
         field=sql.Identifier(column),
         table=sql.Identifier(table)
     )
-    cursor.execute(query)
+    cursor.execute(query, (limit,))
     result = cursor.fetchall()
     distinct_entries = [x[0] for x in result] if result else None
 
     # Total number of records in table
-    query = sql.SQL("SELECT COUNT({field}) FROM {table};").format(
+    query = sql.SQL("SELECT COUNT({field}) FROM {table} LIMIT 1;").format(
         field=sql.Identifier(column),
         table=sql.Identifier(table)
     )
     cursor.execute(query)
     total_records = cursor.fetchone()[0]
 
-    # Count occurrences of each distinct entry
+    # Count occurrences of each distinct entry.
     distinct_dict = {}
     for entry in distinct_entries:
-        query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE {field} = %s;").format(
+        query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE {field} = %s LIMIT 1;").format(
             field=sql.Identifier(column),
             table=sql.Identifier(table)
         )
-        cursor.execute(query, (entry,))
+        cursor.execute(query, (entry, ))
         count = cursor.fetchone()[0]
         distinct_dict[entry] = count
 
@@ -111,7 +116,7 @@ def compute_average_of_column(conn: psycopg2.extensions.connection, column:str,
 
     # Sanitized query for average of specified column
     try:
-        query = sql.SQL("SELECT AVG({field}) FROM {table};").format(
+        query = sql.SQL("SELECT AVG({field}) FROM {table} LIMIT 1;").format(
             field=sql.Identifier(column),
             table=sql.Identifier(table)
         )
@@ -120,7 +125,7 @@ def compute_average_of_column(conn: psycopg2.extensions.connection, column:str,
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except ValueError as e:
+    except psycopg2.errors.UndefinedFunction as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -147,7 +152,7 @@ def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, 
     # Sanitized query for average of specified column
     try:
         query = sql.SQL(
-            "SELECT AVG({field}) FROM {table} WHERE {conditional_column} = %s;"
+            "SELECT AVG({field}) FROM {table} WHERE {conditional_column} = %s LIMIT 1;"
         ).format(
             field=sql.Identifier(column),
             table=sql.Identifier(table),
@@ -158,7 +163,7 @@ def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, 
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except ValueError as e:
+    except psycopg2.errors.UndefinedFunction as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -179,14 +184,14 @@ def compute_accpetance_percentages(conn: psycopg2.extensions.connection,
     cursor = conn.cursor()
 
     # Count total applicants
-    count_query = sql.SQL("SELECT COUNT(*) FROM {table}").format(
+    count_query = sql.SQL("SELECT COUNT(*) FROM {table} limit 1").format(
             table=sql.Identifier(table),
         )
     cursor.execute(count_query)
     count = cursor.fetchone()[0]
 
     # Count accepted applicnats
-    accpeted_query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE status LIKE %s").format(
+    accpeted_query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE status LIKE %s limit 1").format(
             table=sql.Identifier(table),
         )
     cursor.execute(accpeted_query, ("Accepted%",))
@@ -222,7 +227,7 @@ def create_semester_view(conn: psycopg2.extensions.connection, semester: str,
         cursor.execute(query, (semester,))
         conn.commit()
         cursor.close()
-    except ValueError as e:
+    except psycopg2.errors.DuplicateTable as e:
         conn.rollback()
         cursor.close()
         print("View already exists and 'replace' not specified or ",
@@ -249,7 +254,7 @@ def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column
     # Sanitized query for average of specified column
     try:
         query = sql.SQL(
-            "SELECT AVG({field}) FROM {table} WHERE {conditional_column} LIKE %s;"
+            "SELECT AVG({field}) FROM {table} WHERE {conditional_column} LIKE %s LIMIT 1;"
         ).format(
             field=sql.Identifier(column),
             table=sql.Identifier(table),
@@ -260,7 +265,7 @@ def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except ValueError as e:
+    except psycopg2.errors.UndefinedFunction as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -289,7 +294,7 @@ def count_university_program(conn: psycopg2.extensions.connection, university:st
     # Sanitized query to select count of entries from a given program
     try:
         query = sql.SQL(
-            "SELECT COUNT(*) FROM {table} WHERE {field} LIKE %s AND program LIKE %s;"
+            "SELECT COUNT(*) FROM {table} WHERE {field} LIKE %s AND program LIKE %s LIMIT 1;"
         ).format(
             table=sql.Identifier(table),
             field=sql.Identifier("program")
@@ -299,7 +304,7 @@ def count_university_program(conn: psycopg2.extensions.connection, university:st
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except ValueError as e:
+    except psycopg2.errors.UndefinedFunction as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
