@@ -34,7 +34,7 @@ def get_db_connection() -> psycopg2.extensions.connection:
     Returns:
         psycopg2.extensions.connection: A connection object to the PostgreSQL database.
     """
-    with open(r"D:\GitHub\JHU 25-01\jhu_software_concepts\module_3\data\db_config.json", 'r',
+    with open(r"module_3\data\db_config.json", 'r',
               encoding='utf-8') as file:
         database_config = json.load(file)
 
