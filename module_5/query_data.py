@@ -120,7 +120,7 @@ def compute_average_of_column(conn: psycopg2.extensions.connection, column:str,
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except psycopg2.errors.UndefinedFunction as e:
+    except ValueError as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -158,7 +158,7 @@ def compute_conditional_average_of_column(conn: psycopg2.extensions.connection, 
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except psycopg2.errors.UndefinedFunction as e:
+    except ValueError as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -222,7 +222,7 @@ def create_semester_view(conn: psycopg2.extensions.connection, semester: str,
         cursor.execute(query, (semester,))
         conn.commit()
         cursor.close()
-    except (psycopg2.errors.DuplicateTable, psycopg2.errors.InsufficientPrivilege) as e:
+    except ValueError as e:
         conn.rollback()
         cursor.close()
         print("View already exists and 'replace' not specified or ",
@@ -260,7 +260,7 @@ def compute_fuzzy_average_of_column(conn: psycopg2.extensions.connection, column
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except psycopg2.errors.UndefinedFunction as e:
+    except ValueError as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")
@@ -299,7 +299,7 @@ def count_university_program(conn: psycopg2.extensions.connection, university:st
         cursor.close()
 
     # Handle errors if trying to average a text-based column
-    except psycopg2.errors.UndefinedFunction as e:
+    except ValueError as e:
         conn.rollback()
         cursor.close()
         print(f"Unable to compute average for text based column:\n\n{e}")

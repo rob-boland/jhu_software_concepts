@@ -77,7 +77,7 @@ def insert_applicant_record(connection:psycopg2.extensions.connection, applicant
             applicant_data_dict['program_level']
         ))
         connection.commit()
-    except psycopg2.OperationalError as e:
+    except ValueError as e:
         print(f"Error inserting record: {e} on applicant number {applicant_number}")
         connection.rollback()
     finally:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     for applicant_i, applicant in enumerate(applicant_data):
         # Insert each applicant record into the database
         insert_applicant_record(conn, applicant, applicant_i)
-    
+
     print(f"{len(applicant_data)} applicants successfuly inserted into applicants")
 
     conn.close()
