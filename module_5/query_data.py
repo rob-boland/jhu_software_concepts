@@ -36,8 +36,7 @@ def count_semester_entries(conn: psycopg2.extensions.connection, semester: str) 
 
     cursor = conn.cursor()
 
-    query = sql.SQL("""SELECT COUNT({field}) FROM {table} WHERE term = %s;""").format(
-        field=sql.Identifier("*"),
+    query = sql.SQL("""SELECT COUNT(*) FROM {table} WHERE term = %s;""").format(
         table=sql.Identifier("applicants")
     )
     cursor.execute(query, (semester,))
@@ -81,8 +80,7 @@ def compute_percentage_of_distinct_entries(conn: psycopg2.extensions.connection,
     # Count occurrences of each distinct entry
     distinct_dict = {}
     for entry in distinct_entries:
-        query = sql.SQL("SELECT COUNT({count_field}) FROM {table} WHERE {field} = %s;").format(
-            count_field=sql.Identifier("*"),
+        query = sql.SQL("SELECT COUNT(*) FROM {table} WHERE {field} = %s;").format(
             field=sql.Identifier(column),
             table=sql.Identifier(table)
         )
@@ -291,9 +289,8 @@ def count_university_program(conn: psycopg2.extensions.connection, university:st
     # Sanitized query to select count of entries from a given program
     try:
         query = sql.SQL(
-            "SELECT COUNT({count_field}) FROM {table} WHERE {field} LIKE %s AND program LIKE %s;"
+            "SELECT COUNT(*) FROM {table} WHERE {field} LIKE %s AND program LIKE %s;"
         ).format(
-            count_field=sql.Identifier("*"),
             table=sql.Identifier(table),
             field=sql.Identifier("program")
         )
