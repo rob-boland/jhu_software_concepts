@@ -1,13 +1,13 @@
 # Name: Jon Robert N. Boland (jboland7)
 
-# Module Info: Module 3 - SQL Data Presentation Web App
+# Module Info: Module 5 - SQL Data Presentation Web App
 
 This module provides a Flask web application for querying, analyzing, and presenting data from a SQL database. It includes scripts for loading data, running queries, and displaying results interactively.
 
 ## Project Structure
 
 ```
-module_3/
+module_5/
 ├── load_data.py                # Loads data into the SQL database
 ├── query_data.py               # Executes SQL queries and returns results
 ├── run.py                      # Entry point to run the Flask app
