@@ -84,6 +84,7 @@ Navigate to http://localhost:5000 to view the web interface.
 
 - Database configurations are not included in this package. By default, the program looks for a config file at data/db_config.json.
 - Many queries depend on building specific views in the database. Ensure you have adequate permissions to adjust the views you need to utilize, or create your own.
+- PYLINT. Must be run with --generated-member=psycopg2.errors. This is due to psycopg2 dynamically creating members within its C extension. In order to accurately account for them, the module uses errors from the C extension, which pylint is unable to lint and determine members.
 
 ## Approach
 
