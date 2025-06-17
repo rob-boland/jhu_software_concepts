@@ -36,15 +36,15 @@ def get_db_connection() -> psycopg2.extensions.connection:
     """
     with open(r"D:\GitHub\JHU 25-01\jhu_software_concepts\module_3\data\db_config.json", 'r',
               encoding='utf-8') as file:
-        db_config = json.load(file)
+        database_config = json.load(file)
 
     # Create a connection to the PostgreSQL database
     conn = create_connection(
-        db_name=db_config["db_name"],
-        db_user=db_config["db_user"],
-        db_password=db_config["db_password"],
-        db_host=db_config["db_host"],
-        db_port=db_config["db_port"]
+        db_name=database_config["db_name"],
+        db_user=database_config["db_user"],
+        db_password=database_config["db_password"],
+        db_host=database_config["db_host"],
+        db_port=database_config["db_port"]
     )
 
     return conn
