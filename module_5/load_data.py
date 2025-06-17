@@ -103,7 +103,8 @@ if __name__ == "__main__":
 
     for applicant_i, applicant in enumerate(applicant_data):
         # Insert each applicant record into the database
-        print(f"Inserting applicant {applicant_i} of {len(applicant_data)}")
         insert_applicant_record(conn, applicant, applicant_i)
+    
+    print(f"{len(applicant_data)} applicants successfuly inserted into applicants")
 
     conn.close()
