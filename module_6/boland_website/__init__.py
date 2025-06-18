@@ -2,8 +2,8 @@
 __init__.py
 
 This module initializes the Flask application package for the SQL Data Presentation Web App.
-It defines the application factory function `create_app`, which configures and returns a Flask app instance.
-This allows for flexible configuration and testing of the web application.
+It defines the application factory function `create_app`, which configures and returns a Flask app
+instance. This allows for flexible configuration and testing of the web application.
 
 Functions:
     create_app(): Application factory that sets up and returns the Flask app.
