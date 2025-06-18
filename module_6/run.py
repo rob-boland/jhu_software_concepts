@@ -1,14 +1,13 @@
 """
-order.py
+run.py
 
-This module defines the Order class for managing pizza orders in a pizza ordering system.
-It provides functionality to add pizzas to an order, calculate the total cost, track payments,
-and represent the order as a string. The Order class integrates with the Pizza class to build
-customized pizzas and manage multiple pizzas within a single order.
+This module serves as the entry point for running the Flask web application.
+It creates the Flask app instance using the application factory and starts the development server.
 
-Classes:
-    Order: Represents a customer's pizza order, including cart management, cost calculation,
-           and payment tracking.
+Usage:
+    python run.py
+
+The app will be available at http://localhost:5000 by default.
 """
 
 import boland_website
