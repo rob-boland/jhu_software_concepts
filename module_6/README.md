@@ -5,7 +5,7 @@ This is a Flask web application written by Jon Robert N. Boland. The app is orga
 ## Project Structure
 
 ```
-Module_1/
+module_6/
 ├── run.py
 ├── requirements.txt
 ├── boland_website/
@@ -53,7 +53,7 @@ This application is designed to be run simply with the `run.py` file:
 python run.py
 ```
 
-The app will start in debug mode and be accessible at [http://localhost:5000](http://localhost:5000).
+The app will start in debug mode and be accessible at [http://localhost:8080](http://localhost:8080).
 
 ## Project Organization
 
