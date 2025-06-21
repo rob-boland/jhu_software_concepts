@@ -9,7 +9,7 @@ WORKDIR /app
 ADD run.py .
 
 # Install all requirements
-RUN pip install requirements.txt
+RUN pip install -r requirements.txt
 
 # App runs on port 8080 be default
 EXPOSE 8080
