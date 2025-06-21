@@ -18,7 +18,7 @@ def create_app():
     """Create and configure the Flask application."""
 
     # Create Flask app and register blueprints
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="static")
     app.register_blueprint(pages.bp)
 
     return app
