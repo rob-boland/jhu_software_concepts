@@ -1,0 +1,67 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: sans-serif;
+    font-size: 20px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .navigation {
+    overflow: hidden;
+    background-color: darkblue;
+  }
+
+  .navigation a {
+    float: right;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 11px;
+  }
+
+  .navigation a:hover {
+    background-color: rgb(111, 145, 218);
+  }
+
+  .navigation a.active {
+    background-color: rgb(64, 106, 196);
+    color:white;
+  }
+
+  .navigation a.active:hover {
+    background-color: rgb(111, 145, 218);
+  }
+
+  .bio-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .bio-headers {
+    flex: 1;
+    text-align: center;
+  }
+
+  .bio-content {
+    text-align: left;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+  .bio-pic {
+    max-width: 250px;
+    height: auto;
+    padding-right: 5%;
+  }
+
+  .contact-content {
+    text-align: left;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    max-width: 90%;
+  }

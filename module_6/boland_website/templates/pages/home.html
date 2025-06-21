@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+<!-- Container for bio with information on left and picture on right. -->
+  <div class="bio-container">
+    <div class="bio-headers">
+      <h2>Jon Robert (Rob) Boland</h2>
+      <h3>Aviator at U.S. Army</h3>
+      <p class="bio-content">
+        Jon Robert (Rob) Boland is a graduate student at Johns Hopkins University in the M.S. in Data Science program.
+        He currently serves in the U.S. Army as a rotary wing aviator and Aviation Mission Survivabiliy Officer. His focus area is
+        integrating data analytics into Army aviation training programs.
+      </p>
+    </div>
+    <div>
+      <img src ="{{ url_for('static', filename='images/Boland_Pic.jpg') }}" alt="Image of Jon Robert Boland" class="bio-pic">
+    </div>
+  </div>
+{% endblock content %}
