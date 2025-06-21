@@ -7,12 +7,12 @@ It creates the Flask app instance using the application factory and starts the d
 Usage:
     python run.py
 
-The app will be available at http://localhost:5000 by default.
+The app will be available at http://localhost:8080 by default.
 """
 
 import boland_website
 
 if __name__ == "__main__":
-    # Create Flask app, run with localhost:5000 address.
+    # Create Flask app, run with localhost:8080 address.
     app = boland_website.create_app()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
